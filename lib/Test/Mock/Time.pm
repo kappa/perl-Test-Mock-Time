@@ -488,6 +488,9 @@ sub _mock_mojolicious {
     return;
 }
 
+sub set_time :Export {
+    $Absolute = $_[0] // CORE::time();
+}
 
 1;
 __END__
@@ -539,6 +542,9 @@ This document describes Test::Mock::Time version v0.1.6
   Mojo::IOLoop->one_tick;
   EV::run(EV::RUN_ONCE);
 
+  # This will set the current mocked time to the specified value.
+  set_time(0);  # Januray 1, 1970, the wee hours
+
 
 =head1 DESCRIPTION
 
@@ -585,6 +591,16 @@ like sleep() which fast-forward time without processing timers).
 When called without params will fast-forward time by amount needed to run
 callback for next pending timer (it may be 0 in case there are no pending
 timers or if next pending timer already expired).
+
+=head2 set_time
+
+    set_time( $epoch );
+    set_time();
+
+Sets the current mocked time to the specified value. Called without
+arguments resets to actual time() value snapshot.
+
+Support for negative values is system-dependent.
 
 =head2 Mocked functions/methods from other modules
 
